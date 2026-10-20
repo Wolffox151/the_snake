@@ -189,7 +189,6 @@ def main():
 
         if snake.get_head_position() == apple.position:
             if len(snake.positions) >= GRID_WIDTH * GRID_HEIGHT:
-                print('Победа!')
                 pg.quit()
                 return
             snake.length += 1
