@@ -64,11 +64,11 @@ class GameObject:
     def draw(self):
         """Потребовать реализацию отрисовки в дочернем классе."""
         raise NotImplementedError(
-            f'В классе {type(self).__name__} не реализоват метод draw().'
+            f'В классе {type(self).__name__} не реализован метод draw().'
         )
 
     def draw_cell(self, position):
-        """НАрисовать клетку объекта с рамкой."""
+        """Нарисовать клетку объекта с рамкой."""
         rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
         pg.draw.rect(screen, self.body_color, rect)
         pg.draw.rect(screen, BORDER_COLOR, rect, 1)
@@ -77,9 +77,9 @@ class GameObject:
 class Apple(GameObject):
     """Объект яблоко."""
 
-    def __init__(self, body_color=APPLE_COLOR, occupied_cells = None) -> None:
+    def __init__(self, body_color=APPLE_COLOR, occupied_cells=None) -> None:
         """Задать цвет яблока и выбрать свободную клетку."""
-        super().__init__(body_color = body_color)
+        super().__init__(body_color=body_color)
         self.randomize_position(occupied_cells)
 
     def randomize_position(self, occupied_cells=None):
@@ -106,7 +106,7 @@ class Snake(GameObject):
 
     def __init__(self, body_color=SNAKE_COLOR) -> None:
         """Создать змейку направленную вправо из одного сегмента."""
-        super().__init__(body_color = body_color)
+        super().__init__(body_color=body_color)
         self.length = 1
         self.positions = [self.position]
         self.direction = RIGHT
@@ -130,7 +130,7 @@ class Snake(GameObject):
             self.last = self.positions.pop()
 
     def update_direction(self, next_direction=None):
-        """Применить выбранное направление и очистить ожидающий поворот."""
+        """Применить переданное направление движения."""
         if next_direction is not None:
             self.direction = next_direction
 
@@ -178,7 +178,7 @@ def main():
     """Запустить игровой цикл змейки."""
     pg.init()
     snake = Snake()
-    apple = Apple(occupied_cells = snake.positions)
+    apple = Apple(occupied_cells=snake.positions)
     screen.fill(BOARD_BACKGROUND_COLOR)
 
     while True:
@@ -188,6 +188,10 @@ def main():
         snake.move()
 
         if snake.get_head_position() == apple.position:
+            if len(snake.positions) >= GRID_WIDTH * GRID_HEIGHT:
+                print('Победа!')
+                pg.quit()
+                return
             snake.length += 1
             apple.randomize_position(snake.positions)
 
@@ -203,4 +207,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
